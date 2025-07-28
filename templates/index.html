@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disaster Tweet Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Disaster Tweet Classifier</h1>
+        <form method="POST">
+            <textarea name="tweet" placeholder="Enter a tweet..." rows="4" cols="50"></textarea>
+            <br>
+            <button type="submit">Classify Tweet</button>
+        </form>
+        {% if prediction %}
+            <h3>Prediction: {{ prediction }}</h3>
+            <p>Confidence: {{ '%.2f' % confidence }}%</p>
+        {% endif %}
+    </div>
+</body>
+</html>
