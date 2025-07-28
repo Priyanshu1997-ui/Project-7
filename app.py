@@ -24,9 +24,7 @@ max_sequence_length = 40  # Adjust based on your training configuration
 
 # Preprocess input text
 def preprocess_text(text):
-    # Convert text to sequences
     sequences = tokenizer.texts_to_sequences([text])
-    # Pad sequences to match training input
     padded = pad_sequences(sequences, maxlen=max_sequence_length, padding='post', truncating='post')
     return padded
 
@@ -36,20 +34,16 @@ def index():
     prediction = None
     confidence = None
     if request.method == 'POST':
-        # Get tweet input from form
         tweet = request.form['tweet']
         if tweet:
-            # Preprocess the tweet
             processed_tweet = preprocess_text(tweet)
-            # Make prediction
             pred = model.predict(processed_tweet)
             confidence = float(pred[0][0])
-            # Convert to binary prediction (threshold = 0.5)
             prediction = 'Disaster' if confidence >= 0.5 else 'Not a Disaster'
             confidence = confidence * 100 if prediction == 'Disaster' else (1 - confidence) * 100
     return render_template('index.html', prediction=prediction, confidence=confidence)
 
-# API endpoint for programmatic access
+# API endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
@@ -67,4 +61,5 @@ def predict():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 10000))  # Use Render-assigned port or default to 10000
+    app.run(debug=False, host='0.0.0.0', port=port)
